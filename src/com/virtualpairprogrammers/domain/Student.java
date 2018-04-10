@@ -12,8 +12,8 @@ import javax.persistence.Id;
 public class Student {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;  // -- unique PK 
-	
+	private int id; // -- unique PK
+
 	private String enrollmentID;
 	private String name;
 	private String tutorName; // This will become a class soon
@@ -45,12 +45,16 @@ public class Student {
 		// business logic in here as well.
 		return 0;
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}
-	
-	public String toString () {
-		return this.name;
+
+	public void setTutorName(String tutorName) {
+		this.tutorName = tutorName;
+	}
+
+	public String toString() {
+		return "name: " + this.name + " tutor: " + this.tutorName;
 	}
 }
