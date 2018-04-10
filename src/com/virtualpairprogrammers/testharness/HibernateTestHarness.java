@@ -55,11 +55,16 @@ public class HibernateTestHarness {
 		// operation.
 		// I.e. if an object field has changed compared to what is in the database the
 		// commit method will automagically execute a database entry update.
-		tx = session.beginTransaction();
-		myStudent = (Student) session.get(Student.class, 3);
-		myStudent.setTutorName("Sortoff Baldrick"); // update the object.
-		tx.commit();
+		// tx = session.beginTransaction();
+		// myStudent = (Student) session.get(Student.class, 3);
+		// myStudent.setTutorName("Sortoff Baldrick"); // update the object.
+		// tx.commit();
 		// tx.rollback();
+
+		Student testStudent = new Student("Kathleen Heddle");
+		tx = session.beginTransaction();
+		session.save(testStudent);
+		tx.commit();
 
 		session.close();
 	}
