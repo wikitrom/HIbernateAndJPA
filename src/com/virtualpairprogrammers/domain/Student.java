@@ -6,23 +6,23 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * Represents a Student enrolled in the college management system (CMS)
  */
 @Entity
-@Table(name = "TBL_STUDENT")
+@Table(name="TBL_STUDENT")
 public class Student {
-
-	// -- Hibernate : we are using PROPERTY ACCESS
-
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id; // -- unique PK
 
 	private String enrollmentID;
 	private String name;
 	private String tutorName; // This will become a class soon
-
+	
+	@Column(name="NUM_COURSES")   // the mapping could be put in an xml-file
 	private Integer numberOfCourses;
 
 	// -- Hibernate: non-argument constructor required
@@ -53,8 +53,9 @@ public class Student {
 		return 0;
 	}
 
-	// -- getters/setters
 
+	// -- getters/setters
+	
 	public String getEnrollmentID() {
 		return enrollmentID;
 	}
@@ -75,7 +76,6 @@ public class Student {
 		return numberOfCourses;
 	}
 
-	@Column(name = "NUM_COURSES") // the mapping could be put in an xml-file
 	public void setNumberOfCourses(Integer numberOfCourses) {
 		this.numberOfCourses = numberOfCourses;
 	}
@@ -88,8 +88,6 @@ public class Student {
 		this.tutorName = tutorName;
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	public int getId() {
 		return this.id;
 	}
@@ -101,12 +99,5 @@ public class Student {
 	@Override
 	public String toString() {
 		return "name: " + this.name + " tutor: " + this.tutorName;
-	}
-
-	// this annotation is required or hibernate will create a column called
-	// ThisIsNotAColumnInDatabase
-	@Transient
-	public int getThisIsNotAColumnInDatabase() {
-		return 0;
 	}
 }
