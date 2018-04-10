@@ -46,6 +46,10 @@ public class Student {
 		return 0;
 	}
 	
+	public int getId() {
+		return this.id;
+	}
+	
 	public String toString () {
 		return this.name;
 	}

@@ -14,20 +14,46 @@ public class HibernateTestHarness {
 
 	public static void main(String[] args) {
 
-		Student testStudent = new Student("Jessica Ennis", "Toni Minichello");
-		System.out.println(testStudent + "has a grade pont of " + testStudent.calculateGradePointAverage());
-
-		// save the student to the database -- using hibernate
 		SessionFactory sf = getSessionFactory();
 		Session session = sf.openSession();
+		Student myStudent;
 
-		// db access -- requires a transaction object
+		// Student testStudent = new Student("Jessica Ennis", "Toni Minichello");
+		// System.out.println(testStudent + "has a grade pont of " + testStudent.calculateGradePointAverage());
+
+		// db access requires a transaction object
 		// there is a javax.transaction.Transaction method, NOT used with this code.
-		org.hibernate.Transaction tx = session.beginTransaction();
-		session.save(testStudent);
+		org.hibernate.Transaction tx;
+
+		// -- save an object to database
+
+		// Student testStudent = new Student("Jessica Ennis", "Toni Minichello");
+		// System.out.println("This student id: " + testStudent.getId());
+		// tx = session.beginTransaction();
+		// session.save(testStudent);
+		// System.out.println("This student id is now: " + testStudent.getId());
+		// tx.commit();
+
+		// -- read an object to database
+		tx = session.beginTransaction();
+		myStudent = (Student) session.get(Student.class, 2);
+		System.out.println(myStudent);
+		tx.commit();
+
+		// -- delete/remove an object from database
+
+		tx = session.beginTransaction();
+		session.delete(myStudent); // delete from DB, not memory
+		System.out.println(myStudent);
+		tx.commit();
+
+		tx = session.beginTransaction();
+		session.delete(myStudent); // delete from DB, not memory
+		System.out.println(myStudent);
 		tx.commit();
 
 		session.close();
+
 	}
 
 	// -- Helper method
