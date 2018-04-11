@@ -43,11 +43,11 @@ public class HibernateTestHarness {
 			Student foundStudent = (Student) session.get(Student.class, 1);
 			System.out.println(foundStudent);
 
-			// here we can see that Hibernate has also fetched and internally created the
-			// related Tutor object from the database
-			System.out.println(foundStudent.getSupervisorName());
-			Tutor supervisor = foundStudent.getSupervisor();
-			System.out.println(supervisor.getName());
+			Tutor newSup = (Tutor) session.get(Tutor.class, 2);
+			foundStudent.allocateSupervisor(newSup);
+
+			Student foundStudent2 = (Student) session.get(Student.class, 2);
+			foundStudent2.allocateSupervisor(null);
 
 			tx.commit();
 		} catch (Exception e) {
