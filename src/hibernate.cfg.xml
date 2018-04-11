@@ -21,9 +21,9 @@
 			<property name="connection.password"></property>
 		 -->
 
-		<!-- flag, show generated/used sql -->
+		<!-- flag, show generated/used sql - set to false on release -->
 		<property name="show_sql">true</property>
-		<!-- flag, 'hibernate mapping to data definition language' (hbm2ddl) controls 
+				<!-- flag, 'hibernate mapping to data definition language' (hbm2ddl) controls 
 			how hibernate handles the database schema.'update' implies changes to data 
 			structure / fields will be updated in the database schema. This is not used 
 			after schema has been settled but useful during development. -->

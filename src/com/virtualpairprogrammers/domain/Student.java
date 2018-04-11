@@ -6,14 +6,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Represents a Student enrolled in the college management system (CMS)
  */
 @Entity
-@Table(name="TBL_STUDENT")
+@Table(name = "TBL_STUDENT")
 public class Student {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id; // -- unique PK
@@ -21,9 +22,14 @@ public class Student {
 	private String enrollmentID;
 	private String name;
 	private String tutorName; // This will become a class soon
-	
-	@Column(name="NUM_COURSES")   // the mapping could be put in an xml-file
+
+	@Column(name = "NUM_COURSES") // the mapping could be put in an xml-file
 	private Integer numberOfCourses;
+
+	@Transient
+	private double averageScoreAccrosAllExams;
+
+	// -- constructors --
 
 	// -- Hibernate: non-argument constructor required
 	public Student() {
@@ -45,6 +51,8 @@ public class Student {
 		this.tutorName = null;
 	}
 
+	// -- methods --
+
 	public double calculateGradePointAverage() {
 		// some complex business logic!
 		// we won't need this method on the course, BUT it is import
@@ -53,9 +61,8 @@ public class Student {
 		return 0;
 	}
 
-
 	// -- getters/setters
-	
+
 	public String getEnrollmentID() {
 		return enrollmentID;
 	}
