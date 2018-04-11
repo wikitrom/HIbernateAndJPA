@@ -1,6 +1,7 @@
 package com.virtualpairprogrammers.testharness;
 
-import org.apache.derby.tools.sysinfo;
+import java.util.Set;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -40,14 +41,53 @@ public class HibernateTestHarness {
 			// // print out the supervisor
 			// System.out.println(myStudent.getSupervisorName());
 
-			Student foundStudent = (Student) session.get(Student.class, 1);
-			System.out.println(foundStudent);
+			// Student foundStudent = (Student) session.get(Student.class, 1);
+			// System.out.println(foundStudent);
+			//
+			// Tutor newSup = (Tutor) session.get(Tutor.class, 2);
+			// foundStudent.allocateSupervisor(newSup);
+			//
+			// Student foundStudent2 = (Student) session.get(Student.class, 2);
+			// foundStudent2.allocateSupervisor(null);
 
-			Tutor newSup = (Tutor) session.get(Tutor.class, 2);
-			foundStudent.allocateSupervisor(newSup);
+			// Unidirectional relations
+			// Tutor myTutor = (Tutor) session.get(Tutor.class, 2);
 
-			Student foundStudent2 = (Student) session.get(Student.class, 2);
-			foundStudent2.allocateSupervisor(null);
+			// -> up to now tutor has no info about student
+			// for now we revert the relationship direction and let Tutor
+			// refer to Student using a Set of students
+
+			// test - using collection of students in Tutor
+
+			Tutor thisTutor = new Tutor("DOO007", "James Bond", 3000000);
+
+			Student student1 = new Student("Rowan Atkinson");
+			Student student2 = new Student("Baldrik");
+			Student student3 = new Student("Mr Bean");
+
+			session.save(student1);
+			session.save(student2);
+			session.save(student3);
+			session.save(thisTutor);
+
+			thisTutor.addStudentToSupervisionGroup(student1);
+			thisTutor.addStudentToSupervisionGroup(student2);
+			thisTutor.addStudentToSupervisionGroup(student3);
+
+			Set<Student> students = thisTutor.getSupervisionGroup();
+			for (Student next : students) {
+				System.out.println(next);
+			}
+
+			Tutor myTutor = (Tutor) session.get(Tutor.class, 1);
+			students = myTutor.getSupervisionGroup();
+			for (Student next : students) {
+				System.out.println(next);
+			}
+
+			Student student4 = new Student("Canyon King");
+			session.save(student4);
+			myTutor.addStudentToSupervisionGroup(student4);
 
 			tx.commit();
 		} catch (Exception e) {

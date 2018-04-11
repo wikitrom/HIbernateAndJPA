@@ -19,9 +19,9 @@ public class Student {
 
 	private String enrollmentID;
 	private String name;
-	@ManyToOne
-	@JoinColumn(name = "TUTOR_FK")
-	private Tutor supervisor; // -- foreign key FK
+	// @ManyToOne
+	// @JoinColumn(name = "TUTOR_FK")
+	// private Tutor supervisor; // -- foreign key FK
 
 	// -- constructors --
 
@@ -32,24 +32,24 @@ public class Student {
 	/**
 	 * Initialises a student with a particular tutor
 	 */
-	public Student(String name, Tutor supervisor) {
-		this.name = name;
-		this.supervisor = supervisor;
-	}
+	// public Student(String name, Tutor supervisor) {
+	// this.name = name;
+	// this.supervisor = supervisor;
+	// }
 
 	/**
 	 * Initialize a student with no pre-set tutor
 	 */
 	public Student(String name) {
 		this.name = name;
-		this.supervisor = null;
+		// this.supervisor = null;
 	}
 
 	// -- methods --
 
 	@Override
 	public String toString() {
-		return "name: " + this.name + " tutor: " + this.supervisor.getName();
+		return "name: " + this.name;
 	}
 
 	public double calculateGradePointAverage() {
@@ -60,13 +60,13 @@ public class Student {
 		return 0;
 	}
 
-	public void allocateSupervisor(Tutor newSupervisor) {
-		this.supervisor = newSupervisor;
-	}
-
-	public String getSupervisorName() {
-		return supervisor.getName();
-	}
+	// public void allocateSupervisor(Tutor newSupervisor) {
+	// this.supervisor = newSupervisor;
+	// }
+	//
+	// public String getSupervisorName() {
+	// return supervisor.getName();
+	// }
 
 	// -- getters/setters
 
@@ -94,8 +94,8 @@ public class Student {
 		this.id = id;
 	}
 
-	public Tutor getSupervisor() {
-		return supervisor;
-	}
+	// public Tutor getSupervisor() {
+	// return supervisor;
+	// }
 
 }
