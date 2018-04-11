@@ -1,5 +1,6 @@
 package com.virtualpairprogrammers.testharness;
 
+import org.apache.derby.tools.sysinfo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -27,17 +28,26 @@ public class HibernateTestHarness {
 
 		tx = session.beginTransaction();
 		try {
-			myStudent = new Student("Rowan Atkinson");
-			newTutor = new Tutor("DEF456", "James Bond", 300000);
+			// myStudent = new Student("Rowan Atkinson");
+			// newTutor = new Tutor("DEF456", "James Bond", 300000);
+			//
+			// session.save(myStudent);
+			// session.save(newTutor);
+			//
+			// // make the student be supervised by that tutor
+			// // this will trigger hibernate to perform an update of student table entry
+			// myStudent.allocateSupervisor(newTutor);
+			// // print out the supervisor
+			// System.out.println(myStudent.getSupervisorName());
 
-			session.save(myStudent);
-			session.save(newTutor);
+			Student foundStudent = (Student) session.get(Student.class, 1);
+			System.out.println(foundStudent);
 
-			// make the student be supervised by that tutor
-			// this will trigger hibernate to perform an update of student table entry
-			myStudent.allocateSupervisor(newTutor);
-			// print out the supervisor
-			System.out.println(myStudent.getSupervisorName());
+			// here we can see that Hibernate has also fetched and internally created the
+			// related Tutor object from the database
+			System.out.println(foundStudent.getSupervisorName());
+			Tutor supervisor = foundStudent.getSupervisor();
+			System.out.println(supervisor.getName());
 
 			tx.commit();
 		} catch (Exception e) {

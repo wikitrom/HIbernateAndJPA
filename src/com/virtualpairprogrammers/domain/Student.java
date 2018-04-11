@@ -20,8 +20,8 @@ public class Student {
 	private String enrollmentID;
 	private String name;
 	@ManyToOne
-	@JoinColumn(name="TUTOR_FK")
-	private Tutor supervisor;  // -- foreign key FK
+	@JoinColumn(name = "TUTOR_FK")
+	private Tutor supervisor; // -- foreign key FK
 
 	// -- constructors --
 
@@ -49,7 +49,7 @@ public class Student {
 
 	@Override
 	public String toString() {
-		return "name: " + this.name + " tutor: " + this.supervisor;
+		return "name: " + this.name + " tutor: " + this.supervisor.getName();
 	}
 
 	public double calculateGradePointAverage() {
@@ -64,8 +64,7 @@ public class Student {
 		this.supervisor = newSupervisor;
 	}
 
-	public String getSupervisorName()
-	{
+	public String getSupervisorName() {
 		return supervisor.getName();
 	}
 
@@ -93,6 +92,10 @@ public class Student {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Tutor getSupervisor() {
+		return supervisor;
 	}
 
 }
