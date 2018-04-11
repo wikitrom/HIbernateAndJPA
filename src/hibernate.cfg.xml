@@ -8,11 +8,18 @@
 	<session-factory>
 
 		<!-- Database connection settings -->
-		<property name="connection.driver_class">org.apache.derby.jdbc.ClientDriver</property>
-		<property name="connection.url">jdbc:derby://localhost:50000/uabtromDB</property>
+<!-- 		<property name="connection.driver_class">org.apache.derby.jdbc.ClientDriver</property> -->
+<!-- 		<property name="connection.url">jdbc:derby://localhost:50000/uabtromDB</property> -->
 
-		<!-- not needed if we're not using users and passes. <property name="connection.username"></property> 
-			<property name="connection.password"></property> -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.url">jdbc:mysql://localhost:3306/uabtromdb</property>
+		<property name="connection.username">uabtrom</property> 
+		<property name="connection.password">lexicon</property>
+
+		<!-- not needed if we're not using users and passes. 
+			<property name="connection.username"></property> 
+			<property name="connection.password"></property>
+		 -->
 
 		<!-- flag, show generated/used sql -->
 		<property name="show_sql">true</property>
