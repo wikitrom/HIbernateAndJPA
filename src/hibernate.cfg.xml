@@ -8,22 +8,20 @@
 	<session-factory>
 
 		<!-- Database connection settings -->
-<!-- 		<property name="connection.driver_class">org.apache.derby.jdbc.ClientDriver</property> -->
-<!-- 		<property name="connection.url">jdbc:derby://localhost:50000/uabtromDB</property> -->
+		<!-- <property name="connection.driver_class">org.apache.derby.jdbc.ClientDriver</property> -->
+		<!-- <property name="connection.url">jdbc:derby://localhost:50000/uabtromDB</property> -->
 
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
 		<property name="connection.url">jdbc:mysql://localhost:3306/uabtromdb</property>
-		<property name="connection.username">uabtrom</property> 
+		<property name="connection.username">uabtrom</property>
 		<property name="connection.password">lexicon</property>
 
-		<!-- not needed if we're not using users and passes. 
-			<property name="connection.username"></property> 
-			<property name="connection.password"></property>
-		 -->
+		<!-- not needed if we're not using users and passes. <property name="connection.username"></property> 
+			<property name="connection.password"></property> -->
 
 		<!-- flag, show generated/used sql - set to false on release -->
 		<property name="show_sql">true</property>
-				<!-- flag, 'hibernate mapping to data definition language' (hbm2ddl) controls 
+		<!-- flag, 'hibernate mapping to data definition language' (hbm2ddl) controls 
 			how hibernate handles the database schema.'update' implies changes to data 
 			structure / fields will be updated in the database schema. This is not used 
 			after schema has been settled but useful during development. -->
@@ -31,6 +29,7 @@
 
 		<!-- define what classes to map to database tables -->
 		<mapping class="com.virtualpairprogrammers.domain.Student" />
+		<mapping class="com.virtualpairprogrammers.domain.Tutor" />
 	</session-factory>
 
 </hibernate-configuration>

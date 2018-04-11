@@ -7,6 +7,7 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
 import com.virtualpairprogrammers.domain.Student;
+import com.virtualpairprogrammers.domain.Tutor;
 
 public class HibernateTestHarness {
 
@@ -16,16 +17,28 @@ public class HibernateTestHarness {
 
 		SessionFactory sf = getSessionFactory();
 		Session session = sf.openSession();
-		Student myStudent, myTempStudent, testStudent;
-
-		// db access requires a transaction object
+		// database access requires a transaction object
 		// there is a javax.transaction.Transaction method, NOT used with this code.
-		org.hibernate.Transaction tx;
-		tx = session.beginTransaction();
 
+		org.hibernate.Transaction tx;
+
+		Student myStudent;
+		Tutor newTutor;
+
+		tx = session.beginTransaction();
 		try {
-			testStudent = new Student("Sortoff Baldrick");
-			session.save(testStudent);
+			myStudent = new Student("Rowan Atkinson");
+			newTutor = new Tutor("DEF456", "James Bond", 300000);
+
+			session.save(myStudent);
+			session.save(newTutor);
+
+			// make the student be supervised by that tutor
+			// this will trigger hibernate to perform an update of student table entry
+			myStudent.allocateSupervisor(newTutor);
+			// print out the supervisor
+			System.out.println(myStudent.getSupervisorName());
+
 			tx.commit();
 		} catch (Exception e) {
 			if (tx != null)
@@ -36,6 +49,7 @@ public class HibernateTestHarness {
 			if (session != null)
 				session.close();
 		}
+
 	}
 
 	// -- Helper method

@@ -1,18 +1,16 @@
 package com.virtualpairprogrammers.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Represents a Student enrolled in the college management system (CMS)
  */
 @Entity
-@Table(name = "TBL_STUDENT")
 public class Student {
 
 	@Id
@@ -21,13 +19,9 @@ public class Student {
 
 	private String enrollmentID;
 	private String name;
-	private String tutorName; // This will become a class soon
-
-	@Column(name = "NUM_COURSES") // the mapping could be put in an xml-file
-	private Integer numberOfCourses;
-
-	@Transient
-	private double averageScoreAccrosAllExams;
+	@ManyToOne
+	@JoinColumn(name="TUTOR_FK")
+	private Tutor supervisor;  // -- foreign key FK
 
 	// -- constructors --
 
@@ -38,20 +32,25 @@ public class Student {
 	/**
 	 * Initialises a student with a particular tutor
 	 */
-	public Student(String name, String tutorName) {
+	public Student(String name, Tutor supervisor) {
 		this.name = name;
-		this.tutorName = tutorName;
+		this.supervisor = supervisor;
 	}
 
 	/**
-	 * Initialises a student with no pre set tutor
+	 * Initialize a student with no pre-set tutor
 	 */
 	public Student(String name) {
 		this.name = name;
-		this.tutorName = null;
+		this.supervisor = null;
 	}
 
 	// -- methods --
+
+	@Override
+	public String toString() {
+		return "name: " + this.name + " tutor: " + this.supervisor;
+	}
 
 	public double calculateGradePointAverage() {
 		// some complex business logic!
@@ -59,6 +58,15 @@ public class Student {
 		// to remember that classes aren't just get/set pairs - we expect
 		// business logic in here as well.
 		return 0;
+	}
+
+	public void allocateSupervisor(Tutor newSupervisor) {
+		this.supervisor = newSupervisor;
+	}
+
+	public String getSupervisorName()
+	{
+		return supervisor.getName();
 	}
 
 	// -- getters/setters
@@ -79,22 +87,6 @@ public class Student {
 		this.name = name;
 	}
 
-	public Integer getNumberOfCourses() {
-		return numberOfCourses;
-	}
-
-	public void setNumberOfCourses(Integer numberOfCourses) {
-		this.numberOfCourses = numberOfCourses;
-	}
-
-	public String getTutorName() {
-		return tutorName;
-	}
-
-	public void setTutorName(String tutorName) {
-		this.tutorName = tutorName;
-	}
-
 	public int getId() {
 		return this.id;
 	}
@@ -103,8 +95,4 @@ public class Student {
 		this.id = id;
 	}
 
-	@Override
-	public String toString() {
-		return "name: " + this.name + " tutor: " + this.tutorName;
-	}
 }
