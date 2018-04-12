@@ -53,7 +53,7 @@ public class HibernateTestHarness {
 			// Unidirectional relations
 			// Tutor myTutor = (Tutor) session.get(Tutor.class, 2);
 
-			// -> up to now tutor has no info about student
+			// -> up to now tutor has no injfo about student
 			// for now we revert the relationship direction and let Tutor
 			// refer to Student using a Set of students
 
