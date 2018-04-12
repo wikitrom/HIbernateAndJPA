@@ -19,9 +19,9 @@ public class Student {
 
 	private String enrollmentID;
 	private String name;
-	// @ManyToOne
-	// @JoinColumn(name = "TUTOR_FK")
-	// private Tutor supervisor; // -- foreign key FK
+	@ManyToOne
+	@JoinColumn(name = "TUTOR_FK")
+	private Tutor supervisor; // -- foreign key FK
 
 	// -- constructors --
 
@@ -32,10 +32,10 @@ public class Student {
 	/**
 	 * Initialises a student with a particular tutor
 	 */
-	// public Student(String name, Tutor supervisor) {
-	// this.name = name;
-	// this.supervisor = supervisor;
-	// }
+	public Student(String name, Tutor supervisor) {
+		this.name = name;
+		this.supervisor = supervisor;
+	}
 
 	/**
 	 * Initialize a student with no pre-set tutor
@@ -43,8 +43,7 @@ public class Student {
 	public Student(String name, String enrollmentId) {
 		this.name = name;
 		this.enrollmentID = enrollmentId;
-		
-		// this.supervisor = null;
+		this.supervisor = null;
 	}
 
 	// -- methods --
@@ -62,13 +61,14 @@ public class Student {
 		return 0;
 	}
 
-	// public void allocateSupervisor(Tutor newSupervisor) {
-	// this.supervisor = newSupervisor;
-	// }
-	//
-	// public String getSupervisorName() {
-	// return supervisor.getName();
-	// }
+	 public void allocateSupervisor(Tutor newSupervisor) {
+	 this.supervisor = newSupervisor;
+	 newSupervisor.getModifiableSupervisionGroup().add(this);
+	 }
+	
+	 public String getSupervisorName() {
+	 return supervisor.getName();
+	 }
 
 	// -- getters/setters
 
@@ -96,8 +96,8 @@ public class Student {
 		this.id = id;
 	}
 
-	// public Tutor getSupervisor() {
-	// return supervisor;
-	// }
+	 public Tutor getSupervisor() {
+	 return supervisor;
+	 }
 
 }

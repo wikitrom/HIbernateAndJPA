@@ -29,12 +29,8 @@ public class Tutor {
 	private String name;
 	private int salary;
 
-	@OneToMany
-	// @OrderBy("name")   // force table ordered by field 'name' on table read
-	// @OrderColumn(name="id") // force table ordered by columd 'id' on table read
-	
-	@JoinColumn(name="TUTOR_FK")
-	private List<Student> supervisionGroup;
+	@OneToMany(mappedBy = "supervisor") // - already mapped by supervisor in Student class
+	private Set<Student> supervisionGroup;
 
 	// -- constructors -->
 
@@ -49,7 +45,7 @@ public class Tutor {
 		this.staffId = staffId;
 		this.name = name;
 		this.salary = salary;
-		this.supervisionGroup = new ArrayList();
+		this.supervisionGroup = new HashSet<>();
 	}
 
 	// -- getters/setters -->
@@ -66,16 +62,25 @@ public class Tutor {
 		return salary;
 	}
 
-	public List<Student> getSupervisionGroup() {
+	public Set<Student> getSupervisionGroup() {
 		// make sure we return a 'constant' set to get better encapsulation
-		List<Student> unmodifiable = Collections.unmodifiableList(this.supervisionGroup);
+		Set<Student> unmodifiable = Collections.unmodifiableSet(this.supervisionGroup);
 		return unmodifiable;
+	}
+
+	public Set<Student> getModifiableSupervisionGroup() {
+		return this.supervisionGroup;
 	}
 
 	// -- methods -->
 
 	public void addStudentToSupervisionGroup(Student student) {
 		supervisionGroup.add(student);
+		student.allocateSupervisor(this);
+	}
+
+	public String toString() {
+		return "tutor: " + this.name + " (" + this.staffId + ")";
 	}
 
 }
