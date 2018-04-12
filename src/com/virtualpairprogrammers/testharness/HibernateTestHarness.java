@@ -1,5 +1,6 @@
 package com.virtualpairprogrammers.testharness;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
@@ -8,6 +9,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
+import com.sun.org.apache.xml.internal.utils.Hashtree2Node;
 import com.virtualpairprogrammers.domain.Student;
 import com.virtualpairprogrammers.domain.Tutor;
 
@@ -59,36 +61,31 @@ public class HibernateTestHarness {
 
 			// test - using collection of students in Tutor
 
-			Tutor thisTutor = new Tutor("DOO007", "James Bond", 3000000);
+//			Tutor thisTutor = new Tutor("DOO007", "James Bond", 3000000);
+//
+//			Student student1 = new Student("Rowan Atkinson", "1-ROW-2011");
+//			Student student2 = new Student("Baldrik", "2-BAL-1782");
+//			Student student3 = new Student("Mr Bean", "3-BEA-2003");
+//
+//			session.save(student1);
+//			session.save(student2);
+//			session.save(student3);
+//			session.save(thisTutor);
+//
+//			thisTutor.addStudentToSupervisionGroup(student1);
+//			thisTutor.addStudentToSupervisionGroup(student2);
+//			thisTutor.addStudentToSupervisionGroup(student3);
 
-			Student student1 = new Student("Rowan Atkinson");
-			Student student2 = new Student("Baldrik");
-			Student student3 = new Student("Mr Bean");
-
-			session.save(student1);
-			session.save(student2);
-			session.save(student3);
-			session.save(thisTutor);
-
-			thisTutor.addStudentToSupervisionGroup(student1);
-			thisTutor.addStudentToSupervisionGroup(student2);
-			thisTutor.addStudentToSupervisionGroup(student3);
-
-			Set<Student> students = thisTutor.getSupervisionGroup();
-			for (Student next : students) {
-				System.out.println(next);
-			}
-
+			Map<String, Student> students;
 			Tutor myTutor = (Tutor) session.get(Tutor.class, 1);
 			students = myTutor.getSupervisionGroup();
-			for (Student next : students) {
+			for (Student next : students.values()) {
 				System.out.println(next);
 			}
 
-			Student student4 = new Student("Canyon King");
-			session.save(student4);
-			myTutor.addStudentToSupervisionGroup(student4);
-
+			Student requiredStudent = students.get("2-BAL-1782"); 
+			System.out.println("Found required student: " + requiredStudent);
+			
 			tx.commit();
 		} catch (Exception e) {
 			if (tx != null)

@@ -40,8 +40,10 @@ public class Student {
 	/**
 	 * Initialize a student with no pre-set tutor
 	 */
-	public Student(String name) {
+	public Student(String name, String enrollmentId) {
 		this.name = name;
+		this.enrollmentID = enrollmentId;
+		
 		// this.supervisor = null;
 	}
 

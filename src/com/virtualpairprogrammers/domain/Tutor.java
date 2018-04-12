@@ -1,7 +1,9 @@
 package com.virtualpairprogrammers.domain;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -9,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -23,8 +26,9 @@ public class Tutor {
 	private int salary;
 
 	@OneToMany
+	@MapKey(name="enrollmentID")  // what field the 'key' should be mapped to
 	@JoinColumn(name="TUTOR_FK")
-	private Set<Student> supervisionGroup;
+	private Map<String, Student> supervisionGroup;
 
 	// -- constructors -->
 
@@ -39,7 +43,7 @@ public class Tutor {
 		this.staffId = staffId;
 		this.name = name;
 		this.salary = salary;
-		this.supervisionGroup = new HashSet<Student>();
+		this.supervisionGroup = new HashMap<>();
 	}
 
 	// -- getters/setters -->
@@ -56,16 +60,16 @@ public class Tutor {
 		return salary;
 	}
 
-	public Set<Student> getSupervisionGroup() {
+	public Map<String, Student> getSupervisionGroup() {
 		// make sure we return a 'constant' set to get better encapsulation
-		Set<Student> unmodifiable = Collections.unmodifiableSet(this.supervisionGroup);
+		Map<String, Student> unmodifiable = Collections.unmodifiableMap(this.supervisionGroup);
 		return unmodifiable;
 	}
 
 	// -- methods -->
 
 	public void addStudentToSupervisionGroup(Student student) {
-		supervisionGroup.add(student);
+		supervisionGroup.put(student.getEnrollmentID(), student);
 	}
 
 }
