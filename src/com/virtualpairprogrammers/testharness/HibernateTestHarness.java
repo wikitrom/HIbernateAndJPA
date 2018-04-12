@@ -1,5 +1,6 @@
 package com.virtualpairprogrammers.testharness;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,31 +62,29 @@ public class HibernateTestHarness {
 
 			// test - using collection of students in Tutor
 
-//			Tutor thisTutor = new Tutor("DOO007", "James Bond", 3000000);
-//
-//			Student student1 = new Student("Rowan Atkinson", "1-ROW-2011");
-//			Student student2 = new Student("Baldrik", "2-BAL-1782");
-//			Student student3 = new Student("Mr Bean", "3-BEA-2003");
-//
-//			session.save(student1);
-//			session.save(student2);
-//			session.save(student3);
-//			session.save(thisTutor);
-//
-//			thisTutor.addStudentToSupervisionGroup(student1);
-//			thisTutor.addStudentToSupervisionGroup(student2);
-//			thisTutor.addStudentToSupervisionGroup(student3);
+			// Tutor thisTutor = new Tutor("DOO007", "James Bond", 3000000);
+			//
+			// Student student1 = new Student("Rowan Atkinson", "1-ROW-2011");
+			// Student student2 = new Student("Baldrik", "2-BAL-1782");
+			// Student student3 = new Student("Mr Bean", "3-BEA-2003");
+			//
+			// session.save(student1);
+			// session.save(student2);
+			// session.save(student3);
+			// session.save(thisTutor);
+			//
+			// thisTutor.addStudentToSupervisionGroup(student1);
+			// thisTutor.addStudentToSupervisionGroup(student2);
+			// thisTutor.addStudentToSupervisionGroup(student3);
 
-			Map<String, Student> students;
 			Tutor myTutor = (Tutor) session.get(Tutor.class, 1);
-			students = myTutor.getSupervisionGroup();
-			for (Student next : students.values()) {
+
+			List<Student> students = myTutor.getSupervisionGroup();
+
+			for (Student next : students) {
 				System.out.println(next);
 			}
 
-			Student requiredStudent = students.get("2-BAL-1782"); 
-			System.out.println("Found required student: " + requiredStudent);
-			
 			tx.commit();
 		} catch (Exception e) {
 			if (tx != null)

@@ -1,8 +1,10 @@
 package com.virtualpairprogrammers.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.OrderColumn;
 
 @Entity
 public class Tutor {
@@ -26,9 +30,11 @@ public class Tutor {
 	private int salary;
 
 	@OneToMany
-	@MapKey(name="enrollmentID")  // what field the 'key' should be mapped to
+	// @OrderBy("name")   // force table ordered by field 'name' on table read
+	// @OrderColumn(name="id") // force table ordered by columd 'id' on table read
+	
 	@JoinColumn(name="TUTOR_FK")
-	private Map<String, Student> supervisionGroup;
+	private List<Student> supervisionGroup;
 
 	// -- constructors -->
 
@@ -43,7 +49,7 @@ public class Tutor {
 		this.staffId = staffId;
 		this.name = name;
 		this.salary = salary;
-		this.supervisionGroup = new HashMap<>();
+		this.supervisionGroup = new ArrayList();
 	}
 
 	// -- getters/setters -->
@@ -60,16 +66,16 @@ public class Tutor {
 		return salary;
 	}
 
-	public Map<String, Student> getSupervisionGroup() {
+	public List<Student> getSupervisionGroup() {
 		// make sure we return a 'constant' set to get better encapsulation
-		Map<String, Student> unmodifiable = Collections.unmodifiableMap(this.supervisionGroup);
+		List<Student> unmodifiable = Collections.unmodifiableList(this.supervisionGroup);
 		return unmodifiable;
 	}
 
 	// -- methods -->
 
 	public void addStudentToSupervisionGroup(Student student) {
-		supervisionGroup.put(student.getEnrollmentID(), student);
+		supervisionGroup.add(student);
 	}
 
 }
