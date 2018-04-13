@@ -21,11 +21,14 @@
 
 		<!-- flag, show generated/used sql - set to false on release -->
 		<property name="show_sql">true</property>
+		
 		<!-- flag, 'hibernate mapping to data definition language' (hbm2ddl) controls 
 			how hibernate handles the database schema.'update' implies changes to data 
 			structure / fields will be updated in the database schema. This is not used 
-			after schema has been settled but useful during development. -->
-		<property name="hbm2ddl.auto">update</property>
+			after schema has been settled but useful during development.
+			'create' implies any existing tables are dropped and re-created -->
+		<property name="hbm2ddl.auto">create</property>
+<!-- 		<property name="hbm2ddl.auto">update</property> -->
 
 		<!-- define what classes to map to database tables -->
 		<mapping class="com.virtualpairprogrammers.domain.Student" />

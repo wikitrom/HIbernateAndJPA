@@ -1,5 +1,7 @@
 package com.virtualpairprogrammers.testharness;
 
+import java.util.Collection;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -17,23 +19,35 @@ public class HibernateTestHarness {
 	public static void main(String[] args) {
 
 		SessionFactory sf = getSessionFactory();
-		Session session = sf.openSession();
-		// database access requires a transaction object
-		// there is a javax.transaction.Transaction method, NOT used with this code.
+		Session session;
+		org.hibernate.Transaction tx; // javax.transaction.Transaction is NOT used here
 
-		org.hibernate.Transaction tx;
+		// -- TEST : No explicit definition of 'equals' method for class 'Student'
+		System.out.println("DEBUG: NO 'equals' method has been defined for 'Student' class.");
 
+		// -- create some objects to work with
+		Tutor tutor1 = new Tutor("DOO007", "James Bond", 3000000);
+		Tutor tutor2 = new Tutor("BAL001", "Sortoff Baldrik", -100);
+
+		Student student1 = new Student("Rowan Atkinson", "1-ROW-2011");
+		Student student2 = new Student("Baldrik", "2-BAL-1782");
+		Student student3 = new Student("Mr Bean", "3-BEA-2003");
+
+		Subject course1 = new Subject("Black Adder I", 12);
+		Subject course2 = new Subject("Black Adder II", 6);
+		Subject course3 = new Subject("Black Adder III", 3);
+
+		System.out.println();
+		System.out.println("DEBUG: starting first session");
+
+		session = sf.openSession();
 		tx = session.beginTransaction();
 		try {
+			System.out.println();
+			System.out.println("DEBUG: starting first transaction");
+			System.out.println();
+
 			// test - using Bi-directional many-to-many relationship
-
-			Tutor tutor1 = new Tutor("DOO007", "James Bond", 3000000);
-			Tutor tutor2 = new Tutor("BAL001", "Sortoff Baldrik", -100);
-
-			Student student1 = new Student("Rowan Atkinson", "1-ROW-2011");
-			Student student2 = new Student("Baldrik", "2-BAL-1782");
-			Student student3 = new Student("Mr Bean", "3-BEA-2003");
-
 			session.save(student1);
 			session.save(student2);
 			session.save(student3);
@@ -46,10 +60,6 @@ public class HibernateTestHarness {
 			tutor1.addStudentToSupervisionGroup(student3);
 
 			System.out.println("Tutor for " + student1 + " is " + student1.getSupervisor());
-
-			Subject course1 = new Subject("Black Adder I", 12);
-			Subject course2 = new Subject("Black Adder II", 6);
-			Subject course3 = new Subject("Black Adder III", 3);
 
 			session.save(course1);
 			session.save(course2);
@@ -66,7 +76,45 @@ public class HibernateTestHarness {
 			System.out.println("Teacher for " + course1 + " is " + course1.getTeachers());
 			System.out.println("Teacher for " + course2 + " is " + course2.getTeachers());
 			System.out.println("Teacher for " + course3 + " is " + course3.getTeachers());
-			
+
+			tx.commit();
+
+		} catch (Exception e) {
+			if (tx != null)
+				tx.rollback();
+			// normally we throw an exception here
+			System.out.println(e);
+		} finally {
+			if (tx.wasRolledBack() && session != null) // only close if we rolled back
+				session.close();
+		}
+
+		// second transaction - fetch students for tutor from DB
+
+		// -- NOTE: We still use the same session, thus the 'contains' check will be
+		// successful. See what happen if we create a new session further down
+
+		tx = session.beginTransaction();
+		try {
+			System.out.println();
+			System.out.println("DEBUG: starting second transaction");
+			System.out.println("DEBUG: Try to Get data from database.");
+			System.out.println();
+
+			Tutor tutorFromDatabase = (Tutor) session.get(Tutor.class, 1);
+
+			Collection<Student> tutor1Students = tutorFromDatabase.getSupervisionGroup();
+			System.out.println("Tutor " + tutorFromDatabase + " has students:");
+			for (Student next : tutor1Students) {
+				System.out.println(next);
+			}
+
+			boolean isBladrikInTheSetOfStudents = tutor1Students.contains(student2);
+			System.out.println("isBladrikInTheSetOfStudents: " + isBladrikInTheSetOfStudents);
+
+			System.out.println("DEBUG: Note that hibernate does not read from database but use cached data.");
+			System.out.println("DEBUG: Note the value if isBladrikInTheSetOfStudents.");
+
 			tx.commit();
 		} catch (Exception e) {
 			if (tx != null)
@@ -75,7 +123,43 @@ public class HibernateTestHarness {
 			System.out.println(e);
 		} finally {
 			if (session != null)
-				session.close();
+				System.out.println("Debug: Closing first session");
+			session.close();
+		}
+
+		System.out.println("DEBUG: starting second session");
+		session = sf.openSession();
+		tx = session.beginTransaction();
+		try {
+			System.out.println();
+			System.out.println("DEBUG: starting first transaction");
+			System.out.println("DEBUG: Try to Get data from database.");
+			System.out.println();
+
+			Tutor tutorFromDatabase = (Tutor) session.get(Tutor.class, 1);
+
+			Collection<Student> tutor1Students = tutorFromDatabase.getSupervisionGroup();
+			System.out.println("Tutor " + tutorFromDatabase + " has students:");
+			for (Student next : tutor1Students) {
+				System.out.println(next);
+			}
+
+			boolean isBladrikInTheSetOfStudents = tutor1Students.contains(student2);
+			System.out.println("isBladrikInTheSetOfStudents: " + isBladrikInTheSetOfStudents);
+
+			System.out.println("DEBUG: Note that hibernate do read from database when we use a separate session.");
+			System.out.println("DEBUG: Note the value if isBladrikInTheSetOfStudents.");
+
+			tx.commit();
+		} catch (Exception e) {
+			if (tx != null)
+				tx.rollback();
+			// normally we throw an exception here
+			System.out.println(e);
+		} finally {
+			if (session != null)
+				System.out.println("Closing second session");
+			session.close();
 		}
 
 	}
