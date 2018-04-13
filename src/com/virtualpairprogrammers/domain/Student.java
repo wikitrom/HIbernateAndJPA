@@ -25,12 +25,12 @@ public class Student {
 
 	// -- constructors --
 
-	// -- Hibernate: non-argument constructor required
+	// -- required by Hibernate
 	public Student() {
 	}
 
 	/**
-	 * Initialises a student with a particular tutor
+	 * Initialize student with a particular tutor
 	 */
 	public Student(String name, Tutor supervisor) {
 		this.name = name;
@@ -38,7 +38,7 @@ public class Student {
 	}
 
 	/**
-	 * Initialize a student with no pre-set tutor
+	 * Initialize student with no pre-set tutor
 	 */
 	public Student(String name, String enrollmentId) {
 		this.name = name;
@@ -46,27 +46,9 @@ public class Student {
 		this.supervisor = null;
 	}
 
-	// -- methods --
-
-	@Override
-	public String toString() {
-		return "name: " + this.name;
-	}
-
-	public double calculateGradePointAverage() {
-		// some complex business logic!
-		// we won't need this method on the course, BUT it is import
-		// to remember that classes aren't just get/set pairs - we expect
-		// business logic in here as well.
-		return 0;
-	}
-
-	 public void allocateSupervisor(Tutor newSupervisor) {
-	 this.supervisor = newSupervisor;
-	 newSupervisor.getModifiableSupervisionGroup().add(this);
-	 }
+	// -- getters/setters
 	
-	 public String getSupervisorName() {
+	public String getSupervisorName() {
 	 return supervisor.getName();
 	 }
 
@@ -99,5 +81,27 @@ public class Student {
 	 public Tutor getSupervisor() {
 	 return supervisor;
 	 }
+	 
+	 
+	// -- other methods --
 
+	@Override
+	public String toString() {
+		return this.name;
+	}
+
+	public double calculateGradePointAverage() {
+		// some complex business logic!
+		// we won't need this method on the course, BUT it is import
+		// to remember that classes aren't just get/set pairs - we expect
+		// business logic in here as well.
+		return 0;
+	}
+
+	 public void allocateSupervisor(Tutor newSupervisor) {
+	 this.supervisor = newSupervisor;
+	 newSupervisor.getModifiableSupervisionGroup().add(this);
+	 }
+	
+	 
 }

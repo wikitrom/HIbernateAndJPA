@@ -30,6 +30,7 @@
 		<!-- define what classes to map to database tables -->
 		<mapping class="com.virtualpairprogrammers.domain.Student" />
 		<mapping class="com.virtualpairprogrammers.domain.Tutor" />
+		<mapping class="com.virtualpairprogrammers.domain.Subject" />
 	</session-factory>
 
 </hibernate-configuration>

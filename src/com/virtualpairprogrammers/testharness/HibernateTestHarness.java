@@ -1,17 +1,13 @@
 package com.virtualpairprogrammers.testharness;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
-import com.sun.org.apache.xml.internal.utils.Hashtree2Node;
 import com.virtualpairprogrammers.domain.Student;
+import com.virtualpairprogrammers.domain.Subject;
 import com.virtualpairprogrammers.domain.Tutor;
 
 public class HibernateTestHarness {
@@ -29,66 +25,48 @@ public class HibernateTestHarness {
 
 		tx = session.beginTransaction();
 		try {
-			 Student myStudent;
-			 Tutor newTutor;
-			 myStudent = new Student("Rowan Atkinson","111-ROW-2011");
-			 newTutor = new Tutor("DEF456", "James Bond", 300000);
+			// test - using Bi-directional many-to-many relationship
+
+			Tutor tutor1 = new Tutor("DOO007", "James Bond", 3000000);
+			Tutor tutor2 = new Tutor("BAL001", "Sortoff Baldrik", -100);
+
+			Student student1 = new Student("Rowan Atkinson", "1-ROW-2011");
+			Student student2 = new Student("Baldrik", "2-BAL-1782");
+			Student student3 = new Student("Mr Bean", "3-BEA-2003");
+
+			session.save(student1);
+			session.save(student2);
+			session.save(student3);
+			session.save(tutor1);
+			session.save(tutor2);
+
+			// -- setup tutor-student relations
+			tutor1.addStudentToSupervisionGroup(student1);
+			tutor1.addStudentToSupervisionGroup(student2);
+			tutor1.addStudentToSupervisionGroup(student3);
+
+			System.out.println("Tutor for " + student1 + " is " + student1.getSupervisor());
+
+			Subject course1 = new Subject("Black Adder I", 12);
+			Subject course2 = new Subject("Black Adder II", 6);
+			Subject course3 = new Subject("Black Adder III", 3);
+
+			session.save(course1);
+			session.save(course2);
+			session.save(course3);
+
+			// -- setup subject-teacher relationships
+			tutor1.addSubjectAsSubjectsTaught(course1);
+			tutor1.addSubjectAsSubjectsTaught(course2);
+			tutor1.addSubjectAsSubjectsTaught(course3);
+			// alternative way to define the relationship
+			course3.addTutorAsTeacher(tutor2);
+			// tutor2.addSubjectToSubjectsTaught(course3);
+
+			System.out.println("Teacher for " + course1 + " is " + course1.getTeachers());
+			System.out.println("Teacher for " + course2 + " is " + course2.getTeachers());
+			System.out.println("Teacher for " + course3 + " is " + course3.getTeachers());
 			
-			 session.save(myStudent);
-			 session.save(newTutor);
-			
-			 // make the student be supervised by that tutor
-			 // this will trigger hibernate to perform an update of student table entry
-			 myStudent.allocateSupervisor(newTutor);
-			 // print out the supervisor
-			 System.out.println(myStudent.getSupervisorName());
-
-			// Student foundStudent = (Student) session.get(Student.class, 1);
-			// System.out.println(foundStudent);
-			//
-			// Tutor newSup = (Tutor) session.get(Tutor.class, 2);
-			// foundStudent.allocateSupervisor(newSup);
-			//
-			// Student foundStudent2 = (Student) session.get(Student.class, 2);
-			// foundStudent2.allocateSupervisor(null);
-
-			// Unidirectional relations
-			// Tutor myTutor = (Tutor) session.get(Tutor.class, 2);
-
-			// -> up to now tutor has no injfo about student
-			// for now we revert the relationship direction and let Tutor
-			// refer to Student using a Set of students
-
-			// test - using bi-directional relationships
-
-			 Tutor thisTutor = new Tutor("DOO007", "James Bond", 3000000);
-			
-			 Student student1 = new Student("Rowan Atkinson", "1-ROW-2011");
-			 Student student2 = new Student("Baldrik", "2-BAL-1782");
-			 Student student3 = new Student("Mr Bean", "3-BEA-2003");
-			
-			 session.save(student1);
-			 session.save(student2);
-			 session.save(student3);
-			 session.save(thisTutor);
-			
-			 // -- setup relations
-			 thisTutor.addStudentToSupervisionGroup(student1);
-			 thisTutor.addStudentToSupervisionGroup(student2);
-			 thisTutor.addStudentToSupervisionGroup(student3);
-
-			 System.out.println(student1.getSupervisor());
-
-			Tutor myTutor = (Tutor) session.get(Tutor.class, 1);
-			Set<Student> students = myTutor.getSupervisionGroup();
-			for (Student next : students) {
-				System.out.println(next);
-			}
-
-			Student thisStudent = (Student) session.get(Student.class, 2);
-			Tutor myStudentTutor = thisStudent.getSupervisor();
-			System.out.println(myStudentTutor);
-
 			tx.commit();
 		} catch (Exception e) {
 			if (tx != null)

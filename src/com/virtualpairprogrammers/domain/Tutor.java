@@ -1,22 +1,16 @@
 package com.virtualpairprogrammers.domain;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKey;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.OrderColumn;
 
 @Entity
 public class Tutor {
@@ -29,8 +23,11 @@ public class Tutor {
 	private String name;
 	private int salary;
 
-	@OneToMany(mappedBy = "supervisor") // - already mapped by supervisor in Student class
+	@OneToMany(mappedBy = "supervisor") // in Student class
 	private Set<Student> supervisionGroup;
+
+	@ManyToMany(mappedBy = "teachers")
+	private Collection<Subject> subjectsTaught;
 
 	// -- constructors -->
 
@@ -46,6 +43,7 @@ public class Tutor {
 		this.name = name;
 		this.salary = salary;
 		this.supervisionGroup = new HashSet<>();
+		this.subjectsTaught = new HashSet<>();
 	}
 
 	// -- getters/setters -->
@@ -72,15 +70,32 @@ public class Tutor {
 		return this.supervisionGroup;
 	}
 
-	// -- methods -->
+	public Collection<Subject> getSubjectsTaught() {
+		// make sure we return a 'constant' set to get better encapsulation
+		Collection<Subject> unmodifiable = Collections.unmodifiableCollection(this.subjectsTaught);
+		return unmodifiable;
+	}
+
+	public Collection<Subject> getModifiableSubjectsTaught() {
+		return this.subjectsTaught;
+	}
+
+	// -- other methods -->
 
 	public void addStudentToSupervisionGroup(Student student) {
 		supervisionGroup.add(student);
 		student.allocateSupervisor(this);
 	}
 
+	// - use this or addTutorToTeachers from Subject class to related tutors with
+	// subjects (courses)
+	public void addSubjectAsSubjectsTaught(Subject newSubject) {
+		this.subjectsTaught.add(newSubject);
+		newSubject.getModifiableTeachers().add(this);
+	}
+
 	public String toString() {
-		return "tutor: " + this.name + " (" + this.staffId + ")";
+		return this.name + " (" + this.staffId + ")";
 	}
 
 }
